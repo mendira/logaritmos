@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Logaritmos paso a paso</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,800&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<style>
+/* Layout: cuaderno de cuadrícula; cabecera con la fórmula clave, pestañas Ejercicios / Vídeos, niveles en columna única de lectura */
+:root{
+  --paper:#f6f8fb; --grid:#dfe6f0; --card:#ffffff; --ink:#1b2430; --muted:#5b6778;
+  --accent:#2747c7; --accent-soft:#e6ebfb; --ok:#17784f; --ok-soft:#e2f3ea; --red:#c0322a; --red-soft:#fbe7e5; --line:#d5dce7;
+  --f-display:"Literata",Georgia,"Times New Roman",serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-math:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#11151b; --grid:#1b222c; --card:#171d25; --ink:#e3e8ef; --muted:#97a3b4;
+  --accent:#8aa2ff; --accent-soft:#1f2a4a; --ok:#5fcf98; --ok-soft:#14302a; --red:#ff8a80; --red-soft:#3a1d1c; --line:#2a3340; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#11151b; --grid:#1b222c; --card:#171d25; --ink:#e3e8ef; --muted:#97a3b4;
+  --accent:#8aa2ff; --accent-soft:#1f2a4a; --ok:#5fcf98; --ok-soft:#14302a; --red:#ff8a80; --red-soft:#3a1d1c; --line:#2a3340; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 var(--f-body);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.m{font-family:var(--f-math);font-size:.95em;white-space:nowrap}
+sub,sup{font-size:.7em;line-height:0}
+header .eyebrow{font:600 12px/1 var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1{font:800 clamp(30px,6vw,44px)/1.1 var(--f-display);margin:.35em 0 .3em;text-wrap:balance}
+.hero-f{display:inline-flex;flex-wrap:wrap;gap:.6em;align-items:center;background:var(--card);border:1.5px solid var(--ink);border-radius:6px;padding:12px 16px;font:600 clamp(17px,4vw,22px) var(--f-math);box-shadow:4px 4px 0 var(--accent)}
+.hero-f .iff{color:var(--accent)}
+.lead{color:var(--muted);max-width:60ch;margin:.9em 0 0}
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:6px;margin:24px 0 8px;padding:8px 0;background:var(--paper)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.tab{font:600 15px var(--f-body);padding:9px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;text-decoration:none}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tab:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
+.progress{display:flex;align-items:center;gap:10px;margin:6px 0 4px;font-size:14px;color:var(--muted)}
+.bar{flex:1;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .4s}
+.levels-nav{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+.levels-nav a{font:600 13px var(--f-body);color:var(--accent);background:var(--accent-soft);padding:4px 10px;border-radius:6px;text-decoration:none}
+section.level{margin-top:40px;scroll-margin-top:70px}
+.lvl-head{display:flex;align-items:baseline;gap:12px}
+.lvl-num{font:800 15px var(--f-math);color:var(--paper);background:var(--accent);border-radius:4px;padding:2px 8px;flex:none}
+h2{font:800 clamp(22px,4.5vw,28px)/1.2 var(--f-display);margin:0;text-wrap:balance}
+.lvl-sub{color:var(--muted);margin:6px 0 14px}
+details.theory{background:var(--card);border:1.5px dashed var(--accent);border-radius:8px;padding:0 16px;margin-bottom:16px}
+details.theory summary{cursor:pointer;font:600 15px var(--f-body);color:var(--accent);padding:12px 0;list-style:none}
+details.theory summary::before{content:"▸ ";}
+details.theory[open] summary::before{content:"▾ ";}
+.theory-body{padding-bottom:16px}
+.theory-body p,.theory-body li{max-width:65ch}
+.rule{background:var(--paper);border-left:3px solid var(--accent);padding:8px 12px;margin:10px 0;font-family:var(--f-math);font-size:15px;overflow-x:auto}
+.warn{background:var(--red-soft);color:var(--ink);border-radius:6px;padding:8px 12px;margin:10px 0;font-size:15px}
+.warn b{color:var(--red)}
+.tovid{display:inline-block;margin-top:6px;font:600 14px var(--f-body);color:var(--accent)}
+.ex{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.ex.done{border-color:var(--ok);box-shadow:inset 4px 0 0 var(--ok)}
+.ex-top{display:flex;gap:10px;align-items:baseline}
+.ex-n{font:600 13px var(--f-math);color:var(--muted);flex:none;min-width:2.2em}
+.ex-q{min-width:0}
+.ex-q .big{font:600 18px var(--f-math)}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.row input{font:600 16px var(--f-math);padding:8px 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);width:11em;max-width:100%}
+.btn{font:600 14px var(--f-body);padding:8px 13px;border-radius:6px;border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ink)}
+.fb{margin-top:10px;font-size:15px;padding:8px 12px;border-radius:6px}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.no{background:var(--red-soft);color:var(--red)}
+.fb.info{background:var(--accent-soft);color:var(--ink)}
+ol.steps{margin:12px 0 0;padding:0;list-style:none;counter-reset:s;border-top:1px dashed var(--line)}
+ol.steps li{counter-increment:s;padding:8px 0 8px 2.2em;position:relative;border-bottom:1px dashed var(--line)}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:8px;font:600 12px var(--f-math);color:var(--accent);border:1.5px solid var(--accent);border-radius:50%;width:1.6em;height:1.6em;display:grid;place-items:center}
+.why{display:block;color:var(--muted);font-size:14px}
+.graph{margin:14px 0 4px}
+.graph canvas{width:100%;max-width:100%;height:auto;aspect-ratio:4/3;background:var(--paper);border:1px solid var(--line);border-radius:6px;display:block}
+.graph label{display:flex;gap:10px;align-items:center;font-size:14px;margin-top:8px;flex-wrap:wrap}
+.graph input[type=range]{flex:1;min-width:140px}
+.legend{display:flex;gap:14px;font-size:13px;color:var(--muted);margin-top:4px;flex-wrap:wrap}
+.legend span::before{content:"";display:inline-block;width:14px;height:3px;margin-right:5px;vertical-align:middle;background:currentColor}
+/* vídeos */
+.vid-intro{color:var(--muted);max-width:62ch}
+.vgroup{margin-top:28px;scroll-margin-top:70px}
+.vgroup h3{font:800 20px var(--f-display);margin:0 0 10px}
+.vlist{display:grid;gap:10px}
+.vcard{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;text-decoration:none;color:var(--ink)}
+.vcard:hover{border-color:var(--accent)}
+.play{flex:none;width:40px;height:40px;border-radius:50%;background:var(--red);display:grid;place-items:center}
+.play::after{content:"";border-left:13px solid #fff;border-top:8px solid transparent;border-bottom:8px solid transparent;margin-left:3px}
+.vtxt{min-width:0}
+.vtxt b{display:block;font-size:15px}
+.vtxt span{font-size:13px;color:var(--muted)}
+.back{margin-top:6px;font:600 14px var(--f-body);color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
+footer{margin-top:48px;color:var(--muted);font-size:13px}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Matemáticas · 1º de Bachillerato</div>
+  <h1>Logaritmos paso a paso</h1>
+  <div class="hero-f"><span>log<sub>a</sub> b = c</span><span class="iff">⇔</span><span>a<sup>c</sup> = b</span></div>
+  <p class="lead">Un logaritmo responde a una sola pregunta: <b>¿a qué exponente hay que elevar la base para obtener el número?</b> Ve nivel a nivel. Intenta cada ejercicio antes de pedir ayuda: primero la pista, luego el desarrollo paso a paso.</p>
+</header>
+
+<nav class="tabs" role="tablist">
+  <a class="tab" role="tab" id="tab-ej" href="#ejercicios" aria-selected="true">Ejercicios</a>
+  <a class="tab" role="tab" id="tab-vid" href="#videos" aria-selected="false">Vídeos</a>
+</nav>
+
+<main id="view-ej">
+  <div class="progress"><span id="prog-txt">0 resueltos</span><div class="bar"><i id="prog-bar"></i></div></div>
+  <div class="levels-nav" id="lnav"></div>
+  <div id="levels"></div>
+  <p class="lead" style="margin-top:28px">Cómo escribir las respuestas: números como <span class="m">3</span>, <span class="m">-2</span>, <span class="m">1/2</span> o <span class="m">1,21</span>. Si hay dos soluciones, sepáralas con punto y coma: <span class="m">0; 2</span>.</p>
+</main>
+
+<main id="view-vid" hidden>
+  <p class="vid-intro">Vídeos para repasar cada nivel. Cada tarjeta abre en YouTube la búsqueda de ese tema en el canal indicado; elige el primer vídeo que salga del canal. Los mejores para empezar: <b>Matemáticas con Juan</b> (muy pausado) y <b>Unicoos</b> (temario español).</p>
+  <div id="vgroups"></div>
+</main>
+
+<footer>Tu progreso se guarda en este navegador.</footer>
+</div>
+
+<script>
+const L=(b,a)=>`<span class="m">log<sub>${b}</sub> ${a}</span>`;
+const M=s=>`<span class="m">${s}</span>`;
+const yt=q=>"https://www.youtube.com/results?search_query="+encodeURIComponent(q);
+
+const LEVELS=[
+{id:"nivel-1",title:"Qué es un logaritmo",sub:"Calcular logaritmos sencillos con la definición, sin calculadora.",
+theory:`<p>Calcular ${L("a","b")} es preguntarse: <b>¿a qué número elevo <i>a</i> para que me dé <i>b</i>?</b></p>
+<div class="rule">log<sub>2</sub> 8 = 3 &nbsp;porque&nbsp; 2<sup>3</sup> = 8</div>
+<ul>
+<li>La base cumple <span class="m">a &gt; 0</span> y <span class="m">a ≠ 1</span>. El número tiene que ser positivo: <span class="m">log(−4)</span> o <span class="m">log 0</span> no existen.</li>
+<li>Siempre: ${L("a","1")} = 0 (porque a<sup>0</sup>=1) y ${L("a","a")} = 1.</li>
+<li><b>log</b> sin base es base 10 (el de la calculadora). <b>ln</b> es base <i>e</i> ≈ 2,718.</li>
+<li>Truco: escribe el número como potencia de la base. Las fracciones dan exponentes negativos (1/8 = 2<sup>−3</sup>) y las raíces dan exponentes fraccionarios (√2 = 2<sup>1/2</sup>).</li>
+</ul>
+<p>El logaritmo es la operación inversa de la potencia. Mueve la base y fíjate en que las dos curvas son simétricas respecto a la recta y = x:</p>
+<div class="graph"><canvas id="cv" width="640" height="480"></canvas>
+<label for="base">Base a = <b class="m" id="bval">2</b><input type="range" id="base" min="0" max="40" value="17"></label>
+<div class="legend"><span style="color:var(--accent)">y = a<sup>x</sup></span><span style="color:var(--red)">y = log<sub>a</sub> x</span><span style="color:var(--muted)">y = x</span></div></div>`,
+ex:[
+{q:L(2,"8"),ans:[3],hint:"¿2 elevado a qué da 8?",steps:["Buscamos x tal que "+M("2<sup>x</sup> = 8")+".","Escribimos 8 como potencia de 2: "+M("8 = 2<sup>3</sup>")+".","Por tanto "+M("x = 3")+"."]},
+{q:L(3,"81"),ans:[4],hint:"Multiplica 3 por sí mismo hasta llegar a 81.",steps:[M("3·3 = 9, 9·3 = 27, 27·3 = 81")+", es decir "+M("81 = 3<sup>4</sup>")+".","Entonces "+M("log<sub>3</sub> 81 = 4")+"."]},
+{q:M("log 1000"),ans:[3],hint:"Sin base escrita, la base es 10.",steps:["La base es 10: buscamos "+M("10<sup>x</sup> = 1000")+".",M("1000 = 10<sup>3</sup>")+" (un 1 seguido de 3 ceros).","Resultado: "+M("3")+"."]},
+{q:M("log 0,001"),ans:[-3],hint:"0,001 = 1/1000. ¿Cómo se escribe como potencia de 10?",steps:[M("0,001 = 1/1000 = 1/10<sup>3</sup>")+".","Una potencia en el denominador sube con exponente negativo: "+M("1/10<sup>3</sup> = 10<sup>−3</sup>")+".","Resultado: "+M("−3")+". <span class='why'>Los números entre 0 y 1 tienen logaritmo negativo (si la base es mayor que 1).</span>"],wrong:{"3":"Casi: fíjate en que 0,001 es menor que 1. Su logaritmo será negativo."}},
+{q:L(5,"(1/25)"),ans:[-2],hint:"Primero escribe 25 como potencia de 5. Después piensa qué pasa con la fracción.",steps:[M("25 = 5<sup>2</sup>")+", así que "+M("1/25 = 1/5<sup>2</sup> = 5<sup>−2</sup>")+".","Por tanto "+M("log<sub>5</sub>(1/25) = −2")+"."],wrong:{"2":"El signo: 1/25 es 5<sup>−2</sup>, no 5<sup>2</sup>."}},
+{q:L(4,"2"),ans:[0.5],hint:"2 es la raíz cuadrada de 4. Una raíz cuadrada es un exponente 1/2.",steps:[M("2 = √4")+".","Una raíz cuadrada equivale a elevar a 1/2: "+M("√4 = 4<sup>1/2</sup>")+".","Resultado: "+M("1/2")+" (o 0,5)."]},
+{q:L(9,"27"),ans:[1.5],hint:"9 y 27 son potencias de 3. Escribe los dos en base 3.",steps:["Planteamos "+M("9<sup>x</sup> = 27")+".","En base 3: "+M("(3<sup>2</sup>)<sup>x</sup> = 3<sup>3</sup>")+", es decir "+M("3<sup>2x</sup> = 3<sup>3</sup>")+".","Igualamos exponentes: "+M("2x = 3 → x = 3/2")+"."]},
+{q:M("ln e<sup>5</sup>"),ans:[5],hint:"ln es logaritmo en base e.",steps:[M("ln")+" es "+M("log<sub>e</sub>")+".","¿e elevado a qué da e<sup>5</sup>? A 5.","Regla general: "+M("log<sub>a</sub> a<sup>n</sup> = n")+"."]},
+{q:"Halla x: "+M("log<sub>2</sub> x = 5"),ans:[32],hint:"Pasa a forma de potencia con la definición.",steps:["Definición: "+M("log<sub>2</sub> x = 5 ⇔ 2<sup>5</sup> = x")+".",M("x = 32")+"."]},
+{q:"Halla x: "+M("log<sub>x</sub> 49 = 2"),ans:[7],hint:"Aquí la incógnita es la base.",steps:["Definición: "+M("x<sup>2</sup> = 49")+".",M("x = 7")+". El valor −7 no vale porque la base tiene que ser positiva."],wrong:{"-7":"La base de un logaritmo siempre es positiva."}}
+]},
+{id:"nivel-2",title:"Propiedades",sub:"Transformar productos, cocientes y potencias. Es la herramienta de todo lo que viene después.",
+theory:`<div class="rule">log(M·N) = log M + log N</div>
+<div class="rule">log(M/N) = log M − log N</div>
+<div class="rule">log(M<sup>n</sup>) = n · log M</div>
+<div class="rule">log ⁿ√M = (1/n) · log M</div>
+<p>Valen para cualquier base, siempre la misma en toda la expresión. Son las propiedades de las potencias escritas al revés: al multiplicar potencias los exponentes se suman, y el logaritmo <i>es</i> un exponente.</p>
+<div class="warn"><b>Errores típicos:</b> log(M + N) <b>no</b> es log M + log N. (log M)/(log N) <b>no</b> es log(M/N). (log M)<sup>2</sup> <b>no</b> es 2 log M.</div>
+<p>Para los ejercicios con decimales usa <span class="m">log 2 ≈ 0,301</span> y <span class="m">log 3 ≈ 0,477</span>, sin calculadora.</p>`,
+ex:[
+{q:L(2,"(8·16)"),ans:[7],hint:"Producto → suma de logaritmos.",steps:[M("log<sub>2</sub>(8·16) = log<sub>2</sub> 8 + log<sub>2</sub> 16")+".",M("= 3 + 4 = 7")+".","Comprobación: 8·16 = 128 = 2<sup>7</sup>."]},
+{q:L(3,"(243/9)"),ans:[3],hint:"Cociente → resta. 243 = 3<sup>5</sup>.",steps:[M("log<sub>3</sub> 243 − log<sub>3</sub> 9")+".",M("= 5 − 2 = 3")+"."]},
+{q:L(2,"√32"),ans:[2.5],hint:"Raíz cuadrada → multiplica el logaritmo por 1/2.",steps:[M("log<sub>2</sub> √32 = ½ · log<sub>2</sub> 32")+".",M("log<sub>2</sub> 32 = 5")+", así que el resultado es "+M("5/2")+"."]},
+{q:M("log 2 + log 50"),ans:[2],hint:"Junta la suma en un solo logaritmo.",steps:["Suma de logaritmos → logaritmo del producto: "+M("log(2·50) = log 100")+".",M("log 100 = 2")+". <span class='why'>Ninguno de los dos se calcula fácil por separado, pero juntos sí. Por eso sirven las propiedades.</span>"]},
+{q:M("log<sub>6</sub> 4 + log<sub>6</sub> 9"),ans:[2],hint:"Misma idea: un solo logaritmo.",steps:[M("log<sub>6</sub>(4·9) = log<sub>6</sub> 36")+".",M("36 = 6<sup>2</sup>")+" → resultado "+M("2")+"."]},
+{q:M("log 6")+" &nbsp;(usa log 2 y log 3)",ans:[0.778],tol:0.006,hint:"6 = 2·3.",steps:[M("log 6 = log(2·3) = log 2 + log 3")+".",M("≈ 0,301 + 0,477 = 0,778")+"."]},
+{q:M("log 18"),ans:[1.255],tol:0.006,hint:"Descompón 18 en factores primos.",steps:[M("18 = 2·3<sup>2</sup>")+".",M("log 18 = log 2 + 2·log 3")+".",M("≈ 0,301 + 0,954 = 1,255")+"."]},
+{q:M("log 5"),ans:[0.699],tol:0.006,hint:"5 no es producto de 2 y 3… pero 5 = 10/2.",steps:[M("log 5 = log(10/2) = log 10 − log 2")+".",M("= 1 − 0,301 = 0,699")+". <span class='why'>Truco útil: el 10 siempre está disponible porque log 10 = 1.</span>"]},
+{q:M("log 0,12"),ans:[-0.921],tol:0.006,hint:"0,12 = 12/100 y 12 = 2<sup>2</sup>·3.",steps:[M("log 0,12 = log 12 − log 100")+".",M("log 12 = 2·log 2 + log 3 ≈ 0,602 + 0,477 = 1,079")+".",M("1,079 − 2 = −0,921")+"."]}
+]},
+{id:"nivel-3",title:"Cambio de base",sub:"Para calcular con calculadora logaritmos de cualquier base.",
+theory:`<div class="rule">log<sub>a</sub> b = log b / log a &nbsp;=&nbsp; ln b / ln a</div>
+<p>La calculadora solo tiene <b>log</b> (base 10) y <b>ln</b>. Con esta fórmula pasas cualquier base a una de ellas. Da igual cuál uses, el resultado es el mismo.</p>
+<p>En la calculadora: <span class="m">log 7 ÷ log 3</span>. Si lo escribes en una línea, pon paréntesis: <span class="m">log(7)/log(3)</span>.</p>
+<p>Redondea las respuestas a dos decimales.</p>`,
+ex:[
+{q:L(2,"10"),ans:[3.32],tol:0.011,hint:"log 10 = 1.",steps:[M("log<sub>2</sub> 10 = log 10 / log 2")+".",M("= 1 / 0,30103 ≈ 3,32")+".","Tiene sentido: 2<sup>3</sup> = 8 y 2<sup>4</sup> = 16, así que el resultado está entre 3 y 4."]},
+{q:L(3,"7"),ans:[1.77],tol:0.011,hint:"Antes de calcular, estima: 3<sup>1</sup> = 3 y 3<sup>2</sup> = 9.",steps:["Estimación: 7 está entre 3 y 9, así que el resultado está entre 1 y 2.",M("log 7 / log 3 ≈ 0,8451 / 0,4771")+".",M("≈ 1,77")+"."]},
+{q:L(5,"100"),ans:[2.86],tol:0.011,hint:"log 100 lo sabes sin calculadora.",steps:[M("log 100 / log 5 = 2 / 0,69897")+".",M("≈ 2,86")+"."]},
+{q:L(4,"8")+" &nbsp;(exacto, sin calculadora)",ans:[1.5],hint:"Cambia a base 2, donde 4 y 8 son sencillos.",steps:[M("log<sub>4</sub> 8 = log<sub>2</sub> 8 / log<sub>2</sub> 4")+".",M("= 3/2")+". <span class='why'>El cambio de base no obliga a usar base 10: elige la que simplifique.</span>"]},
+{q:M("log<sub>2</sub> 3 · log<sub>3</sub> 8"),ans:[3],hint:"Escribe los dos factores con cambio a base 10 y mira qué se simplifica.",steps:[M("(log 3 / log 2) · (log 8 / log 3)")+".","El log 3 se va: queda "+M("log 8 / log 2 = log<sub>2</sub> 8")+".",M("= 3")+"."]}
+]},
+{id:"nivel-4",title:"Ecuaciones exponenciales",sub:"La incógnita está en el exponente.",
+theory:`<p>Tres métodos, de más sencillo a menos:</p>
+<ol>
+<li><b>Misma base.</b> Si puedes escribir los dos lados como potencias de la misma base, igualas exponentes. <span class="m">2<sup>x</sup> = 8 → 2<sup>x</sup> = 2<sup>3</sup> → x = 3</span>.</li>
+<li><b>Tomar logaritmos.</b> Si no se puede (por ejemplo <span class="m">5<sup>x</sup> = 7</span>), aplica log a los dos lados y baja el exponente: <span class="m">x·log 5 = log 7</span>.</li>
+<li><b>Cambio de variable.</b> Si aparecen <span class="m">4<sup>x</sup></span> y <span class="m">2<sup>x</sup></span> a la vez, llama <span class="m">t = 2<sup>x</sup></span>. Como <span class="m">4<sup>x</sup> = (2<sup>x</sup>)<sup>2</sup> = t<sup>2</sup></span>, sale una ecuación de 2º grado.</li>
+</ol>
+<div class="warn"><b>Ojo:</b> con el cambio de variable, <span class="m">t = 2<sup>x</sup></span> nunca puede ser negativo ni cero. Esas soluciones de t se descartan.</div>`,
+ex:[
+{q:M("2<sup>x</sup> = 32"),ans:[5],hint:"32 como potencia de 2.",steps:[M("32 = 2<sup>5</sup>")+".",M("2<sup>x</sup> = 2<sup>5</sup> → x = 5")+"."]},
+{q:M("3<sup>x+1</sup> = 81"),ans:[3],hint:"81 = 3<sup>4</sup>. Iguala exponentes.",steps:[M("3<sup>x+1</sup> = 3<sup>4</sup>")+".",M("x + 1 = 4 → x = 3")+"."]},
+{q:M("4<sup>x</sup> = 8"),ans:[1.5],hint:"4 y 8 son potencias de 2.",steps:[M("(2<sup>2</sup>)<sup>x</sup> = 2<sup>3</sup> → 2<sup>2x</sup> = 2<sup>3</sup>")+".",M("2x = 3 → x = 3/2")+"."]},
+{q:M("5<sup>x</sup> = 7")+" &nbsp;(dos decimales)",ans:[1.21],tol:0.011,hint:"7 no es potencia de 5: toma logaritmos.",steps:["Log en los dos lados: "+M("log 5<sup>x</sup> = log 7")+".","Bajamos el exponente: "+M("x · log 5 = log 7")+".",M("x = log 7 / log 5 ≈ 0,8451 / 0,6990 ≈ 1,21")+"."]},
+{q:M("2<sup>x+1</sup> + 2<sup>x</sup> = 24"),ans:[3],hint:"2<sup>x+1</sup> = 2·2<sup>x</sup>. Saca factor común 2<sup>x</sup>.",steps:[M("2<sup>x+1</sup> = 2 · 2<sup>x</sup>")+".",M("2·2<sup>x</sup> + 2<sup>x</sup> = 3·2<sup>x</sup> = 24")+".",M("2<sup>x</sup> = 8 = 2<sup>3</sup> → x = 3")+"."]},
+{q:M("4<sup>x</sup> − 3·2<sup>x</sup> − 4 = 0"),ans:[2],hint:"Llama t = 2<sup>x</sup>. Entonces 4<sup>x</sup> = t<sup>2</sup>.",steps:["Con "+M("t = 2<sup>x</sup>")+": "+M("t<sup>2</sup> − 3t − 4 = 0")+".","Fórmula de 2º grado: "+M("t = (3 ± 5)/2")+" → "+M("t = 4")+" o "+M("t = −1")+".",M("2<sup>x</sup> = −1")+" no tiene solución (una potencia de 2 siempre es positiva).",M("2<sup>x</sup> = 4 → x = 2")+"."],wrong:{"-1":"−1 es un valor de t, no de x. Y además 2<sup>x</sup> = −1 no tiene solución."}},
+{q:M("9<sup>x</sup> − 10·3<sup>x</sup> + 9 = 0")+" &nbsp;(dos soluciones)",ans:[0,2],multi:true,hint:"t = 3<sup>x</sup>, y 9<sup>x</sup> = t<sup>2</sup>.",steps:["Con "+M("t = 3<sup>x</sup>")+": "+M("t<sup>2</sup> − 10t + 9 = 0")+".",M("t = (10 ± 8)/2")+" → "+M("t = 9")+" o "+M("t = 1")+".",M("3<sup>x</sup> = 9 → x = 2")+".",M("3<sup>x</sup> = 1 → x = 0")+". Soluciones: "+M("x = 0")+" y "+M("x = 2")+"."]}
+]},
+{id:"nivel-5",title:"Ecuaciones logarítmicas",sub:"La incógnita está dentro del logaritmo. Aquí hay que comprobar siempre.",
+theory:`<p>Método general:</p>
+<ol>
+<li>Con las propiedades, deja <b>un solo logaritmo a cada lado</b> (o un logaritmo igual a un número).</li>
+<li>Si queda <span class="m">log A = log B</span>, iguala los argumentos: <span class="m">A = B</span>.</li>
+<li>Si queda <span class="m">log<sub>a</sub> A = c</span>, usa la definición: <span class="m">A = a<sup>c</sup></span>.</li>
+<li>Resuelve la ecuación que salga.</li>
+<li><b>Comprueba</b> cada solución en la ecuación original: todos los argumentos tienen que ser positivos.</li>
+</ol>
+<p>Un número suelto también se puede escribir como logaritmo: <span class="m">2 = log 100</span>, <span class="m">1 = log 10</span>.</p>
+<div class="warn"><b>El paso 5 no es opcional.</b> Es muy frecuente que salga una solución que da logaritmo de un número negativo. Esa se descarta.</div>`,
+ex:[
+{q:M("log<sub>2</sub>(x + 3) = 4"),ans:[13],hint:"Definición: lo de dentro es 2<sup>4</sup>.",steps:[M("x + 3 = 2<sup>4</sup> = 16")+".",M("x = 13")+".","Comprobación: "+M("13 + 3 = 16 &gt; 0")+" ✓"]},
+{q:M("log x + log 4 = 2"),ans:[25],hint:"Junta la izquierda en un logaritmo y escribe 2 como log 100.",steps:[M("log(4x) = 2")+".",M("4x = 10<sup>2</sup> = 100")+".",M("x = 25")+". Comprobación: log 25 existe ✓"]},
+{q:M("log(x + 1) − log(x − 1) = log 3"),ans:[2],hint:"Resta → cociente. Luego iguala argumentos.",steps:[M("log((x+1)/(x−1)) = log 3")+".",M("(x+1)/(x−1) = 3 → x + 1 = 3x − 3")+".",M("4 = 2x → x = 2")+".","Comprobación: "+M("x+1 = 3 &gt; 0")+", "+M("x−1 = 1 &gt; 0")+" ✓"]},
+{q:M("2·log x = log(x + 6)"),ans:[3],hint:"El 2 que multiplica sube como exponente.",steps:[M("log x<sup>2</sup> = log(x + 6)")+".",M("x<sup>2</sup> = x + 6 → x<sup>2</sup> − x − 6 = 0")+".",M("x = (1 ± 5)/2")+" → "+M("x = 3")+" o "+M("x = −2")+".","Comprobación: con "+M("x = −2")+" aparece "+M("log(−2)")+", que no existe → se descarta. Solución: "+M("x = 3")+"."],wrong:{"-2":"Comprueba en la ecuación original: con x = −2 aparece log(−2), que no existe.","3;-2":"Una de las dos no vale. Comprueba cada una en la ecuación original.","-2;3":"Una de las dos no vale. Comprueba cada una en la ecuación original."}},
+{q:M("log<sub>2</sub> x + log<sub>2</sub>(x − 2) = 3"),ans:[4],hint:"Suma → producto. Luego definición: el argumento vale 2<sup>3</sup>.",steps:[M("log<sub>2</sub>(x(x−2)) = 3")+".",M("x<sup>2</sup> − 2x = 8 → x<sup>2</sup> − 2x − 8 = 0")+".",M("x = (2 ± 6)/2")+" → "+M("x = 4")+" o "+M("x = −2")+".","Con "+M("x = −2")+" sale "+M("log<sub>2</sub>(−2)")+" → no vale. Solución: "+M("x = 4")+" (argumentos 4 y 2, positivos ✓)."],wrong:{"-2":"Con x = −2 el primer logaritmo sería log₂(−2). No existe.","4;-2":"Comprueba las dos: una no vale.","-2;4":"Comprueba las dos: una no vale."}},
+{q:M("log(3x + 1) − log(2x − 3) = 1 − log 5"),ans:[7],hint:"La derecha: 1 = log 10, así que 1 − log 5 = log(10/5).",steps:["Derecha: "+M("log 10 − log 5 = log 2")+".","Izquierda: "+M("log((3x+1)/(2x−3))")+".",M("(3x+1)/(2x−3) = 2 → 3x + 1 = 4x − 6")+".",M("x = 7")+". Comprobación: "+M("3·7+1 = 22 &gt; 0")+", "+M("2·7−3 = 11 &gt; 0")+" ✓"]}
+]},
+{id:"nivel-6",title:"Problemas con sentido",sub:"Para qué sirve todo esto: dinero, química y crecimiento.",
+theory:`<p>Cuando algo crece o decrece en un porcentaje fijo cada periodo, la fórmula es exponencial: <span class="m">C = C<sub>0</sub> · (1 + r)<sup>t</sup></span>. Si la pregunta es <b>cuánto tiempo</b>, el tiempo está en el exponente y se despeja con logaritmos (nivel 4, método 2).</p>
+<p>Plantea la ecuación, aísla la potencia y toma logaritmos. Redondea a dos decimales.</p>`,
+ex:[
+{q:"Metes 1000 € en un depósito al 5 % de interés compuesto anual. ¿Cuántos años tardas en tener 2000 €? (con decimales)",ans:[14.21],tol:0.02,hint:"Plantea 1000·1,05<sup>t</sup> = 2000 y divide entre 1000.",steps:["Planteamiento: "+M("1000 · 1,05<sup>t</sup> = 2000")+".","Divide: "+M("1,05<sup>t</sup> = 2")+".","Logaritmos: "+M("t · log 1,05 = log 2")+".",M("t = 0,30103 / 0,02119 ≈ 14,21")+" años. <span class='why'>En la práctica, a los 15 años, porque el interés se abona una vez al año.</span>"]},
+{q:"El pH de una disolución es "+M("pH = −log [H⁺]")+". Si "+M("[H⁺] = 2,5·10<sup>−4</sup>")+", ¿cuál es el pH?",ans:[3.6],tol:0.011,hint:"Usa las propiedades: log(2,5·10<sup>−4</sup>) = log 2,5 + log 10<sup>−4</sup>.",steps:[M("log(2,5·10<sup>−4</sup>) = log 2,5 − 4")+".",M("log 2,5 ≈ 0,398")+", así que "+M("≈ −3,602")+".",M("pH = −(−3,602) ≈ 3,60")+" (ácido)."]},
+{q:"Un cultivo empieza con 500 bacterias y se duplica cada 3 horas: "+M("N = 500 · 2<sup>t/3</sup>")+". ¿Cuántas horas tarda en llegar a 40 000?",ans:[18.97],tol:0.02,hint:"Divide entre 500, toma logaritmos y despeja t al final.",steps:[M("2<sup>t/3</sup> = 40000/500 = 80")+".",M("(t/3) · log 2 = log 80")+".",M("t/3 = 1,9031 / 0,30103 ≈ 6,322")+".",M("t ≈ 18,97")+" horas."]}
+]}
+];
+
+const VIDEOS=[
+{lvl:"nivel-1",title:"Nivel 1 · Qué es un logaritmo",items:[
+ {ch:"Matemáticas con Juan",t:"Definición de logaritmo y primeros cálculos",q:"matemáticas con juan logaritmos definición"},
+ {ch:"Unicoos",t:"Logaritmos desde cero",q:"unicoos logaritmos definición"},
+ {ch:"Susi Profe",t:"Calcular logaritmos sin calculadora",q:"susi profe logaritmos"}]},
+{lvl:"nivel-2",title:"Nivel 2 · Propiedades",items:[
+ {ch:"Matemáticas con Juan",t:"Propiedades de los logaritmos",q:"matemáticas con juan propiedades de los logaritmos"},
+ {ch:"Unicoos",t:"Propiedades de los logaritmos",q:"unicoos propiedades logaritmos"}]},
+{lvl:"nivel-3",title:"Nivel 3 · Cambio de base",items:[
+ {ch:"Matemáticas con Juan",t:"Cambio de base",q:"matemáticas con juan cambio de base logaritmos"},
+ {ch:"Unicoos",t:"Cambio de base",q:"unicoos cambio de base logaritmo"}]},
+{lvl:"nivel-4",title:"Nivel 4 · Ecuaciones exponenciales",items:[
+ {ch:"Matemáticas con Juan",t:"Ecuaciones exponenciales",q:"matemáticas con juan ecuaciones exponenciales"},
+ {ch:"Unicoos",t:"Ecuaciones exponenciales con cambio de variable",q:"unicoos ecuaciones exponenciales cambio de variable"}]},
+{lvl:"nivel-5",title:"Nivel 5 · Ecuaciones logarítmicas",items:[
+ {ch:"Matemáticas con Juan",t:"Ecuaciones logarítmicas",q:"matemáticas con juan ecuaciones logarítmicas"},
+ {ch:"Unicoos",t:"Ecuaciones logarítmicas",q:"unicoos ecuaciones logaritmicas"}]},
+{lvl:"nivel-6",title:"Nivel 6 · Problemas",items:[
+ {ch:"Matemáticas con Juan",t:"Problemas de interés compuesto con logaritmos",q:"matemáticas con juan interés compuesto logaritmos"},
+ {ch:"Unicoos",t:"Problemas de crecimiento exponencial",q:"unicoos problemas exponenciales logaritmos"}]},
+{lvl:null,title:"Para practicar más",items:[
+ {ch:"Khan Academy en español",t:"Logaritmos con ejercicios autocorregidos",url:"https://es.khanacademy.org/search?page_search_query=logaritmos"}]}
+];
+
+/* ---------- estado ---------- */
+let solved={};
+try{solved=JSON.parse(localStorage.getItem("log-solved")||"{}")}catch(e){solved={}}
+const save=()=>{try{localStorage.setItem("log-solved",JSON.stringify(solved))}catch(e){}};
+const total=LEVELS.reduce((s,l)=>s+l.ex.length,0);
+function updProg(){const n=Object.keys(solved).length;document.getElementById("prog-txt").textContent=`${n} de ${total} resueltos`;document.getElementById("prog-bar").style.width=(100*n/total)+"%";}
+
+function parseNum(s){
+  s=s.trim().replace(/−/g,"-").replace(/\s+/g,"").replace(",",".");
+  if(!s)return NaN;
+  const f=s.match(/^(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)$/);
+  if(f)return parseFloat(f[1])/parseFloat(f[2]);
+  return /^-?\d*\.?\d+$/.test(s)?parseFloat(s):NaN;
+}
+function parseAns(s){return s.split(/;| y /).map(parseNum).filter(v=>!Number.isNaN(v)||true);}
+
+/* ---------- render ejercicios ---------- */
+const lv=document.getElementById("levels"),ln=document.getElementById("lnav");
+LEVELS.forEach((L_,li)=>{
+  ln.insertAdjacentHTML("beforeend",`<a href="#${L_.id}">${li+1}. ${L_.title}</a>`);
+  const sec=document.createElement("section");sec.className="level";sec.id=L_.id;
+  sec.innerHTML=`<div class="lvl-head"><span class="lvl-num">${li+1}</span><h2>${L_.title}</h2></div>
+  <p class="lvl-sub">${L_.sub}</p>
+  <details class="theory" ${li===0?"open":""}><summary>Explicación previa</summary><div class="theory-body">${L_.theory}
+  <a class="tovid" href="#videos-${L_.id}">▶ Vídeos de este nivel</a></div></details>`;
+  L_.ex.forEach((e,ei)=>{
+    const key=L_.id+"-"+ei,id="in-"+key;
+    const d=document.createElement("div");d.className="ex"+(solved[key]?" done":"");
+    d.innerHTML=`<div class="ex-top"><span class="ex-n">${li+1}.${ei+1}</span><div class="ex-q"><span class="big">${e.q}</span></div></div>
+    <div class="row"><input id="${id}" inputmode="text" autocomplete="off" placeholder="${e.multi?"sol1; sol2":"tu respuesta"}" aria-label="Respuesta ${li+1}.${ei+1}">
+    <button class="btn" data-a="check">Comprobar</button><button class="btn ghost" data-a="hint">Pista</button><button class="btn ghost" data-a="steps">Ver desarrollo</button></div>
+    <div class="fbbox"></div><ol class="steps" hidden></ol>`;
+    const inp=d.querySelector("input"),fb=d.querySelector(".fbbox"),ol=d.querySelector(".steps"),bs=d.querySelector('[data-a="steps"]');
+    let shown=0;
+    const msg=(cls,html)=>{fb.innerHTML=`<div class="fb ${cls}">${html}</div>`};
+    d.querySelector('[data-a="check"]').onclick=()=>{
+      const vals=inp.value.split(/;| y /).map(parseNum);
+      if(!inp.value.trim()||vals.some(Number.isNaN)){msg("no","No entiendo la respuesta. Escribe un número como 3, -2, 1/2 o 1,21.");return;}
+      const tol=e.tol||1e-6;
+      const sorted=a=>[...a].sort((x,y)=>x-y);
+      const ok=vals.length===e.ans.length&&sorted(vals).every((v,i)=>Math.abs(v-sorted(e.ans)[i])<=tol);
+      if(ok){msg("ok","✓ Correcto."+(shown<e.steps.length?" Si quieres, revisa el desarrollo para comprobar que lo has razonado igual.":""));d.classList.add("done");solved[key]=1;save();updProg();}
+      else{
+        const k=vals.map(v=>+v.toFixed(4)).join(";");
+        const w=e.wrong&&e.wrong[k];
+        msg("no","✗ "+(w||(e.multi&&vals.length<e.ans.length?"Faltan soluciones.":"No es correcto. Repasa la pista o abre el desarrollo paso a paso.")));
+      }
+    };
+    d.querySelector('[data-a="hint"]').onclick=()=>msg("info","Pista: "+e.hint);
+    bs.onclick=()=>{
+      ol.hidden=false;
+      if(shown<e.steps.length){ol.insertAdjacentHTML("beforeend",`<li>${e.steps[shown]}</li>`);shown++;}
+      bs.textContent=shown<e.steps.length?"Siguiente paso":"Desarrollo completo";
+      bs.disabled=shown>=e.steps.length;
+    };
+    inp.addEventListener("keydown",ev=>{if(ev.key==="Enter")d.querySelector('[data-a="check"]').click()});
+    sec.appendChild(d);
+  });
+  lv.appendChild(sec);
+});
+updProg();
+
+/* ---------- render vídeos ---------- */
+const vg=document.getElementById("vgroups");
+VIDEOS.forEach(g=>{
+  const box=document.createElement("div");box.className="vgroup";if(g.lvl)box.id="videos-"+g.lvl;
+  box.innerHTML=`<h3>${g.title}</h3><div class="vlist">${g.items.map(it=>`<a class="vcard" href="${it.url||yt(it.q)}" target="_blank" rel="noopener"><span class="play"></span><span class="vtxt"><b>${it.t}</b><span>${it.ch}${it.url?"":" · búsqueda en YouTube"}</span></span></a>`).join("")}</div>
+  ${g.lvl?`<button class="back" data-go="${g.lvl}">← Volver a los ejercicios del nivel</button>`:""}`;
+  vg.appendChild(box);
+});
+vg.addEventListener("click",ev=>{const b=ev.target.closest("[data-go]");if(b){location.hash=b.dataset.go;}});
+
+/* ---------- vistas por hash ---------- */
+function route(){
+  const h=location.hash.slice(1);
+  const isVid=h==="videos"||h.startsWith("videos-");
+  document.getElementById("view-ej").hidden=isVid;
+  document.getElementById("view-vid").hidden=!isVid;
+  document.getElementById("tab-ej").setAttribute("aria-selected",!isVid);
+  document.getElementById("tab-vid").setAttribute("aria-selected",isVid);
+  const t=h&&h!=="ejercicios"&&h!=="videos"?document.getElementById(h):null;
+  if(t){t.scrollIntoView();}else if(h==="videos"||h==="ejercicios"){window.scrollTo(0,0);}
+}
+addEventListener("hashchange",route);route();
+
+/* ---------- gráfica ---------- */
+const cv=document.getElementById("cv"),ctx=cv.getContext("2d"),rng=document.getElementById("base"),bv=document.getElementById("bval");
+const bases=[];for(let i=0;i<=40;i++){let b=0.2+i*0.1;if(Math.abs(b-1)<0.05)b=1.1;bases.push(+b.toFixed(1));}
+bases[17]=2;
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+function draw(){
+  const a=bases[rng.value];bv.textContent=String(a).replace(".",",");
+  const W=cv.width,H=cv.height,xmin=-4,xmax=8,ymin=-4,ymax=5;
+  const X=x=>(x-xmin)/(xmax-xmin)*W,Y=y=>H-(y-ymin)/(ymax-ymin)*H;
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle=css("--grid");ctx.lineWidth=1;
+  for(let x=xmin;x<=xmax;x++){ctx.beginPath();ctx.moveTo(X(x),0);ctx.lineTo(X(x),H);ctx.stroke();}
+  for(let y=ymin;y<=ymax;y++){ctx.beginPath();ctx.moveTo(0,Y(y));ctx.lineTo(W,Y(y));ctx.stroke();}
+  ctx.strokeStyle=css("--muted");ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,Y(0));ctx.lineTo(W,Y(0));ctx.moveTo(X(0),0);ctx.lineTo(X(0),H);ctx.stroke();
+  ctx.fillStyle=css("--muted");ctx.font="14px "+css("--f-math");
+  for(let x=xmin+1;x<xmax;x++)if(x)ctx.fillText(x,X(x)-4,Y(0)+16);
+  for(let y=ymin+1;y<ymax;y++)if(y)ctx.fillText(y,X(0)+6,Y(y)+5);
+  ctx.setLineDash([6,6]);ctx.beginPath();ctx.moveTo(X(ymin),Y(ymin));ctx.lineTo(X(ymax),Y(ymax));ctx.stroke();ctx.setLineDash([]);
+  const plot=(f,col,x0)=>{ctx.strokeStyle=col;ctx.lineWidth=3;ctx.beginPath();let st=false;
+    for(let px=0;px<=W;px++){const x=xmin+px/W*(xmax-xmin);if(x<=x0){st=false;continue;}const y=f(x);
+      if(!isFinite(y)||y<ymin-2||y>ymax+2){st=false;continue;}st?ctx.lineTo(px,Y(y)):ctx.moveTo(px,Y(y));st=true;}ctx.stroke();};
+  plot(x=>Math.pow(a,x),css("--accent"),-Infinity);
+  plot(x=>Math.log(x)/Math.log(a),css("--red"),0);
+  ctx.fillStyle=css("--ink");
+  [[0,1],[1,0]].forEach(([x,y])=>{ctx.beginPath();ctx.arc(X(x),Y(y),5,0,7);ctx.fill();});
+  ctx.fillText("(1, 0)",X(1)+8,Y(0)-8);ctx.fillText("(0, 1)",X(0)+8,Y(1)-8);
+}
+rng.addEventListener("input",draw);draw();
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",draw);
+new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+</script>
+</body>
+</html>
