@@ -267,6 +267,7 @@ const VIDEOS=[
 /* ---------- estado ---------- */
 let solved={};
 try{solved=JSON.parse(localStorage.getItem("log-solved")||"{}")}catch(e){solved={}}
+const gc=(path,title)=>{try{if(window.goatcounter&&window.goatcounter.count)window.goatcounter.count({path:"logaritmos-"+path,title:title,event:true})}catch(e){}};
 const save=()=>{try{localStorage.setItem("log-solved",JSON.stringify(solved))}catch(e){}};
 const total=LEVELS.reduce((s,l)=>s+l.ex.length,0);
 function updProg(){const n=Object.keys(solved).length;document.getElementById("prog-txt").textContent=`${n} de ${total} resueltos`;document.getElementById("prog-bar").style.width=(100*n/total)+"%";}
@@ -305,7 +306,7 @@ LEVELS.forEach((L_,li)=>{
       const tol=e.tol||1e-6;
       const sorted=a=>[...a].sort((x,y)=>x-y);
       const ok=vals.length===e.ans.length&&sorted(vals).every((v,i)=>Math.abs(v-sorted(e.ans)[i])<=tol);
-      if(ok){msg("ok","✓ Correcto."+(shown<e.steps.length?" Si quieres, revisa el desarrollo para comprobar que lo has razonado igual.":""));d.classList.add("done");solved[key]=1;save();updProg();}
+      if(ok){msg("ok","✓ Correcto."+(shown<e.steps.length?" Si quieres, revisa el desarrollo para comprobar que lo has razonado igual.":""));d.classList.add("done");if(!solved[key])gc("resuelto-"+key,"Resuelto "+(li+1)+"."+(ei+1));solved[key]=1;save();updProg();}
       else{
         const k=vals.map(v=>+v.toFixed(4)).join(";");
         const w=e.wrong&&e.wrong[k];
@@ -330,7 +331,7 @@ updProg();
 const vg=document.getElementById("vgroups");
 VIDEOS.forEach(g=>{
   const box=document.createElement("div");box.className="vgroup";if(g.lvl)box.id="videos-"+g.lvl;
-  box.innerHTML=`<h3>${g.title}</h3><div class="vlist">${g.items.map(it=>`<a class="vcard" href="${it.url||yt(it.q)}" target="_blank" rel="noopener"><span class="play"></span><span class="vtxt"><b>${it.t}</b><span>${it.ch}${it.url?"":" · búsqueda en YouTube"}</span></span></a>`).join("")}</div>
+  box.innerHTML=`<h3>${g.title}</h3><div class="vlist">${g.items.map(it=>`<a class="vcard" href="${it.url||yt(it.q)}" target="_blank" rel="noopener" onclick="gc('video-${g.lvl||'extra'}','Vídeo: ${it.ch}')"><span class="play"></span><span class="vtxt"><b>${it.t}</b><span>${it.ch}${it.url?"":" · búsqueda en YouTube"}</span></span></a>`).join("")}</div>
   ${g.lvl?`<button class="back" data-go="${g.lvl}">← Volver a los ejercicios del nivel</button>`:""}`;
   vg.appendChild(box);
 });
@@ -340,6 +341,7 @@ vg.addEventListener("click",ev=>{const b=ev.target.closest("[data-go]");if(b){lo
 function route(){
   const h=location.hash.slice(1);
   const isVid=h==="videos"||h.startsWith("videos-");
+  if(isVid)gc("pestana-videos","Abre vídeos");
   document.getElementById("view-ej").hidden=isVid;
   document.getElementById("view-vid").hidden=!isVid;
   document.getElementById("tab-ej").setAttribute("aria-selected",!isVid);
@@ -381,5 +383,6 @@ rng.addEventListener("input",draw);draw();
 matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",draw);
 new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
 </script>
+<script data-goatcounter="https://mendira.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
